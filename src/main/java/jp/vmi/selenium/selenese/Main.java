@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Properties;
 
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
@@ -79,6 +81,14 @@ public class Main {
             log.info("Start: " + PROG_TITLE + " {}", getVersion());
             Runner runner = new Runner();
             runner.setCommandLineArgs(args);
+
+            Map<String, String> vars = config.getVariables();
+            if (vars != null) {
+                for (String key : vars.keySet()) {
+                    runner.getVarsMap().put(key, vars.get(key));
+                }
+            }
+
             setupRunner(runner, config, filenames);
             Result totalResult = runner.run(filenames);
             runner.finish();

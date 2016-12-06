@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +23,7 @@ import org.kohsuke.args4j.ParserProperties;
 
 import jp.vmi.selenium.selenese.result.Result.Level;
 import jp.vmi.selenium.selenese.utils.LangUtils;
+import org.kohsuke.args4j.spi.MapOptionHandler;
 
 import static jp.vmi.selenium.selenese.result.Result.Level.*;
 import static org.apache.commons.lang3.SystemUtils.*;
@@ -41,9 +43,9 @@ public class DefaultConfig implements IConfig {
 
     // parts of help message.
     private static final String[] HEADER = {
-        "Selenese script interpreter implemented by Java.",
-        "",
-        "Usage: java -jar selenese-runner.jar <option> ... <test-case|test-suite> ..."
+            "Selenese script interpreter implemented by Java.",
+            "",
+            "Usage: java -jar selenese-runner.jar <option> ... <test-case|test-suite> ..."
     };
 
     private static String statusListItem(Level level) {
@@ -51,26 +53,26 @@ public class DefaultConfig implements IConfig {
     }
 
     private static final String[] FOOTER = {
-        "[Note]",
-        "*1 It is available if using \"--driver remote --remote-browser firefox\".",
-        "",
-        "*2 If you want to use basic and/or proxy authentication on Firefox, "
-            + "then create new profile, "
-            + "install AutoAuth plugin, "
-            + "configure all settings, "
-            + "access test site with the profile, "
-            + "and specify the profile by --profile option.",
-        "",
-        "*3 Use \"java -cp ..." + PATH_SEPARATOR + "selenese-runner.jar Main --command-factory ...\". ",
-        "Because \"java\" command ignores all class path settings, when using \"-jar\" option.",
-        "",
-        "*4 The list of strict exit code is follows:",
-        statusListItem(SUCCESS),
-        statusListItem(WARNING),
-        statusListItem(FAILURE),
-        statusListItem(ERROR),
-        statusListItem(UNEXECUTED),
-        statusListItem(MAX_TIME_EXCEEDED)
+            "[Note]",
+            "*1 It is available if using \"--driver remote --remote-browser firefox\".",
+            "",
+            "*2 If you want to use basic and/or proxy authentication on Firefox, "
+                    + "then create new profile, "
+                    + "install AutoAuth plugin, "
+                    + "configure all settings, "
+                    + "access test site with the profile, "
+                    + "and specify the profile by --profile option.",
+            "",
+            "*3 Use \"java -cp ..." + PATH_SEPARATOR + "selenese-runner.jar Main --command-factory ...\". ",
+            "Because \"java\" command ignores all class path settings, when using \"-jar\" option.",
+            "",
+            "*4 The list of strict exit code is follows:",
+            statusListItem(SUCCESS),
+            statusListItem(WARNING),
+            statusListItem(FAILURE),
+            statusListItem(ERROR),
+            statusListItem(UNEXECUTED),
+            statusListItem(MAX_TIME_EXCEEDED)
     };
 
     private final CmdLineParser parser;
@@ -83,7 +85,7 @@ public class DefaultConfig implements IConfig {
     private String config;
 
     @Option(name = "--driver", aliases = "-d", metaVar = "<driver>",
-        usage = "firefox (default) | chrome | ie | safari | htmlunit | phantomjs | remote | appium | FQCN-of-WebDriverFactory")
+            usage = "firefox (default) | chrome | ie | safari | htmlunit | phantomjs | remote | appium | FQCN-of-WebDriverFactory")
     private String driver;
 
     @Option(name = "--profile", aliases = "-p", metaVar = "<name>", usage = "profile name (Firefox only *1)")
@@ -200,6 +202,9 @@ public class DefaultConfig implements IConfig {
     @Option(name = "--help", aliases = "-h", usage = "show this message.")
     private Boolean help;
 
+    @Option(name = "--var", aliases = "-v", usage = "Define variables", handler=MapOptionHandler.class)
+    private Map<String, String> variables;
+
     @Argument
     private String[] args = LangUtils.EMPTY_STRING_ARRAY;
 
@@ -214,9 +219,9 @@ public class DefaultConfig implements IConfig {
         String columns = System.getProperty("columns", System.getenv("COLUMNS"));
         helpWidth = (columns != null && columns.matches("\\d+")) ? Integer.parseInt(columns) : HELP_WIDTH;
         ParserProperties props = ParserProperties.defaults()
-            .withOptionSorter(null)
-            .withUsageWidth(helpWidth)
-            .withShowDefaults(false);
+                .withOptionSorter(null)
+                .withUsageWidth(helpWidth)
+                .withShowDefaults(false);
         parser = new CmdLineParser(this, props);
         if (args.length > 0)
             parseCommandLine(args);
@@ -580,6 +585,15 @@ public class DefaultConfig implements IConfig {
 
     public void setArgs(String[] args) {
         this.args = args;
+    }
+
+    @Override
+    public Map<String, String> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(Map<String, String> variables) {
+        this.variables = variables;
     }
 
     /**

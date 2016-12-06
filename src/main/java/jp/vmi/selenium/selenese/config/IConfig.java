@@ -1,5 +1,7 @@
 package jp.vmi.selenium.selenese.config;
 
+import java.util.Map;
+
 /**
  * Configuration information.
  */
@@ -207,4 +209,6 @@ public interface IConfig {
     String getMaxTime();
 
     boolean isHelp();
+
+    Map<String, String> getVariables();
 }
