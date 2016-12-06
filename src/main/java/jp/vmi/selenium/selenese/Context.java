@@ -238,4 +238,6 @@ public interface Context extends WrapsDriver {
      * @return interactive.
      */
     boolean isInteractive();
+
+    Short getMaxRetryNumber();
 }

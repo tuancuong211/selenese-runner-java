@@ -205,6 +205,9 @@ public class DefaultConfig implements IConfig {
     @Option(name = "--var", aliases = "-v", usage = "Define variables", handler=MapOptionHandler.class)
     private Map<String, String> variables;
 
+    @Option(name = "--max-retry-number", aliases = "-m", usage = "Define retry number when a test case fails")
+    private Short maxRetryNumber;
+
     @Argument
     private String[] args = LangUtils.EMPTY_STRING_ARRAY;
 
@@ -596,6 +599,15 @@ public class DefaultConfig implements IConfig {
         this.variables = variables;
     }
 
+    @Override
+    public Short getMaxRetryNumber() {
+        return maxRetryNumber;
+    }
+
+    public void setMaxRetryNumber(Short maxRetryNumber) {
+        this.maxRetryNumber = maxRetryNumber;
+    }
+
     /**
      * Parse command line arguments.
      *
@@ -786,4 +798,5 @@ public class DefaultConfig implements IConfig {
         }
         pw.flush();
     }
+
 }

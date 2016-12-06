@@ -152,21 +152,34 @@ public class TestSuite implements Selenese, ITestSuite, IHtmlResultTestSuite {
         context.prepareWebDriver();
         context.setLatestPageInformation(PageInformation.EMPTY);
         context.resetSpeed();
+
+        short maxTestCaseRetryNum = context.getMaxRetryNumber() != null ? context.getMaxRetryNumber() : 1;
+
         for (Selenese selenese : seleneseList) {
-            Result r;
-            try {
-                r = selenese.execute(this, context);
-            } catch (RuntimeException e) {
-                String msg = e.getMessage();
-                result = new Error(msg);
-                log.error(msg);
-                throw e;
-            } catch (InvalidSeleneseException e) {
-                r = new Error(e);
+            Result r = executeChild(selenese, context);
+
+            if (selenese instanceof TestCase) {
+                int count = 0;
+                while (!r.isSuccess() && count < maxTestCaseRetryNum) {
+                    log.info("Retry test case " + selenese.getName() + " at the time #" + (count + 1));
+                    r = executeChild(selenese, context);
+                    count++;
+                }
             }
+
             result = result.update(r);
         }
         return result;
+    }
+
+    private Result executeChild(Selenese selenese, Context context) {
+        try {
+            return selenese.execute(this, context);
+        } catch (Exception ex) {
+            String msg = ex.getMessage();
+            log.error(msg);
+            return new Error(msg);
+        }
     }
 
     @Override

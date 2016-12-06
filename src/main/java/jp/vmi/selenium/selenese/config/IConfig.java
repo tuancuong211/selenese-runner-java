@@ -211,4 +211,6 @@ public interface IConfig {
     boolean isHelp();
 
     Map<String, String> getVariables();
+
+    Short getMaxRetryNumber();
 }

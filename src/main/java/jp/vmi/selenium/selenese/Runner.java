@@ -100,6 +100,7 @@ public class Runner implements Context, ScreenshotHandler, HighlightHandler, JUn
 
     private MaxTimeTimer maxTimeTimer = new MaxTimeTimer.NoOp();
 
+    private Short maxRetryNumber;
     /**
      * Constructor.
      */
@@ -425,6 +426,15 @@ public class Runner implements Context, ScreenshotHandler, HighlightHandler, JUn
     @Override
     public boolean isInteractive() {
         return isInteractive;
+    }
+
+    @Override
+    public Short getMaxRetryNumber() {
+        return maxRetryNumber;
+    }
+
+    public void setMaxRetryNumber(Short maxRetryNumber) {
+        this.maxRetryNumber = maxRetryNumber;
     }
 
     /**

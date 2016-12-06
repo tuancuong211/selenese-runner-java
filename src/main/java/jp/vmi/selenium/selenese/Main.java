@@ -148,6 +148,9 @@ public class Main {
         }
         runner.setDriver(manager.get());
         runner.setWebDriverPreparator(manager);
+
+        runner.setMaxRetryNumber(config.getMaxRetryNumber());
+
         if (config.isHighlight())
             runner.setHighlight(true);
         if (config.isInteractive())

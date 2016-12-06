@@ -174,4 +174,9 @@ public class NullContext implements Context {
     public boolean isInteractive() {
         return false;
     }
+
+    @Override
+    public Short getMaxRetryNumber() {
+        return null;
+    }
 }
