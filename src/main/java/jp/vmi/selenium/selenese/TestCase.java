@@ -27,6 +27,7 @@ import jp.vmi.selenium.selenese.utils.StopWatch;
 
 import static jp.vmi.selenium.selenese.command.StartLoop.*;
 import static jp.vmi.selenium.selenese.result.Success.*;
+import static jp.vmi.selenium.selenese.result.Unexecuted.UNEXECUTED;
 
 /**
  * test-case object for execution.
@@ -315,5 +316,13 @@ public class TestCase implements Selenese, ITestCase, IHtmlResultTestCase {
         if (filename != null)
             s.append(" (").append(filename).append(")");
         return s.toString();
+    }
+
+    public void resetResult() {
+        cresultList.setResult(UNEXECUTED);
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

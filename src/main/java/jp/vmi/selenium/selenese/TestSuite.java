@@ -160,8 +160,11 @@ public class TestSuite implements Selenese, ITestSuite, IHtmlResultTestSuite {
 
             if (selenese instanceof TestCase) {
                 int count = 0;
+
                 while (!r.isSuccess() && count < maxTestCaseRetryNum) {
-                    log.info("Retry test case " + selenese.getName() + " at the time #" + (count + 1));
+                    ((TestCase) selenese).resetResult();
+                    ((TestCase) selenese).setName("* RETRIED #" + (count + 1) + " - " + selenese.getName());
+                 log.info("Retry test case " + selenese.getName() + " at the time #" + (count + 1));
                     r = executeChild(selenese, context);
                     count++;
                 }
